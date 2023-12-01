@@ -1,5 +1,5 @@
 pub fn process(input: &str) -> String {
-    input.to_string()
+    todo!("Write code here")
 }
 
 #[cfg(test)]
@@ -8,6 +8,8 @@ mod tests {
 
     #[test]
     fn test_process() {
-        assert_eq!(process("test"), "test");
+        todo!("Write tests for process function");
+        let input = "";
+        assert_eq!(process(input), "");
     }
 }
