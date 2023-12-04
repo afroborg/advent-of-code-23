@@ -3,9 +3,11 @@ enum Cube {
     Green,
     Blue
 }
-struct Move(Cube, usize);
-struct Round(Vec<Move>);
-struct Game(Vec<Round>);
+struct Move {
+    cube: Cube,
+    count: usize,
+}
+
 
 pub fn process(input: &str) -> String {
     let games = input.lines().map(|line| {
@@ -25,27 +27,30 @@ pub fn process(input: &str) -> String {
                     _ => panic!("Invalid cube")
                 };
 
-                Move(cube, num)
-            }).collect::<Vec<Move>>();
+                Move {
+                    cube,
+                    count: num,
+                }
+            }).collect::<Vec<_>>();
 
-            Round(moves)
-        }).collect::<Vec<Round>>();
+            moves
+        }).collect::<Vec<_>>();
 
-        Game(rounds)
-    }).collect::<Vec<Game>>();
+        rounds
+    });
 
-    let tot = games.iter().map(|game| {
-        let rgb = game.0.iter().fold((0,0,0), |mut acc, round| {
-            round.0.iter().for_each(|m| {
-                match m.0 {
+    let tot = games.map(|game| {
+        let rgb = game.iter().fold((0,0,0), |mut acc, round| {
+            round.iter().for_each(|m| {
+                match m.cube {
                     Cube::Red => {
-                        acc.0 = acc.0.max(m.1);
+                        acc.0 = acc.0.max(m.count);
                     },
                     Cube::Green => {
-                        acc.1 = acc.1.max(m.1);
+                        acc.1 = acc.1.max(m.count);
                     },
                     Cube::Blue => {
-                        acc.2  = acc.2.max(m.1);
+                        acc.2  = acc.2.max(m.count);
                     }
                 }
             });
