@@ -2,13 +2,13 @@ use std::collections::HashSet;
 
 #[derive(Clone, Debug)]
 struct Card {
-    number: u8,
+    number: usize,
     winning: HashSet<usize>,
     yours: HashSet<usize>,
 }
 
 impl Card {
-    pub fn new(number: u8, winning: HashSet<usize>, yours: HashSet<usize>) -> Self {
+    pub fn new(number: usize, winning: HashSet<usize>, yours: HashSet<usize>) -> Self {
         Self {
             number,
             winning,
@@ -29,7 +29,7 @@ pub fn process(input: &str) -> String {
         let winning = to_hashset(winning);
         let yours = to_hashset(yours);
 
-        Card::new(i as u8 + 1, winning, yours)
+        Card::new(i + 1, winning, yours)
     }).collect::<Vec<_>>();
 
     let mut count = 0;
@@ -44,9 +44,9 @@ pub fn process(input: &str) -> String {
             continue;
         }
 
-        let n = card.number as usize;
+        let n = card.number;
 
-        for i in n + 1..=n + wins {
+        for i in (n + 1)..=(n + wins) {
             deck.push(cards[i - 1].clone());
         }
     }
