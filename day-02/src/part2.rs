@@ -1,57 +1,61 @@
 enum Cube {
     Red,
     Green,
-    Blue
+    Blue,
 }
 struct Move {
     cube: Cube,
     count: usize,
 }
 
-
 pub fn process(input: &str) -> String {
     let games = input.lines().map(|line| {
         // remove the "Game: " prefix
         let data = line.split(": ").last().expect("No data");
 
-        let rounds = data.split("; ").map(|round| {
-            let moves = round.split(", ").map(|m| {
-                let mut split_move = m.split_whitespace();
+        let rounds = data
+            .split("; ")
+            .map(|round| {
+                let moves = round
+                    .split(", ")
+                    .map(|m| {
+                        let mut split_move = m.split_whitespace();
 
-                let num = split_move.next().expect("No number").parse().expect("Not a number");
+                        let num = split_move
+                            .next()
+                            .expect("No number")
+                            .parse()
+                            .expect("Not a number");
 
-                let cube = match split_move.next().expect("No cube") {
-                    "red" => Cube::Red,
-                    "green" => Cube::Green,
-                    "blue" => Cube::Blue,
-                    _ => panic!("Invalid cube")
-                };
+                        let cube = match split_move.next().expect("No cube") {
+                            "red" => Cube::Red,
+                            "green" => Cube::Green,
+                            "blue" => Cube::Blue,
+                            _ => panic!("Invalid cube"),
+                        };
 
-                Move {
-                    cube,
-                    count: num,
-                }
-            }).collect::<Vec<_>>();
+                        Move { cube, count: num }
+                    })
+                    .collect::<Vec<_>>();
 
-            moves
-        }).collect::<Vec<_>>();
+                moves
+            })
+            .collect::<Vec<_>>();
 
         rounds
     });
 
     let tot = games.map(|game| {
-        let rgb = game.iter().fold((0,0,0), |mut acc, round| {
-            round.iter().for_each(|m| {
-                match m.cube {
-                    Cube::Red => {
-                        acc.0 = acc.0.max(m.count);
-                    },
-                    Cube::Green => {
-                        acc.1 = acc.1.max(m.count);
-                    },
-                    Cube::Blue => {
-                        acc.2  = acc.2.max(m.count);
-                    }
+        let rgb = game.iter().fold((0, 0, 0), |mut acc, round| {
+            round.iter().for_each(|m| match m.cube {
+                Cube::Red => {
+                    acc.0 = acc.0.max(m.count);
+                }
+                Cube::Green => {
+                    acc.1 = acc.1.max(m.count);
+                }
+                Cube::Blue => {
+                    acc.2 = acc.2.max(m.count);
                 }
             });
 
@@ -61,9 +65,7 @@ pub fn process(input: &str) -> String {
         rgb.0 * rgb.1 * rgb.2
     });
 
-
     tot.sum::<usize>().to_string()
-
 }
 
 #[cfg(test)]

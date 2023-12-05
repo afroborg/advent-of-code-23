@@ -22,15 +22,19 @@ impl Card {
 }
 
 pub fn process(input: &str) -> String {
-    let cards = input.lines().enumerate().map(|(i, line)| {
-        let (_, numbers) = line.split_once(": ").unwrap();
-        let (winning, yours) = numbers.split_once(" | ").unwrap();
+    let cards = input
+        .lines()
+        .enumerate()
+        .map(|(i, line)| {
+            let (_, numbers) = line.split_once(": ").unwrap();
+            let (winning, yours) = numbers.split_once(" | ").unwrap();
 
-        let winning = to_hashset(winning);
-        let yours = to_hashset(yours);
+            let winning = to_hashset(winning);
+            let yours = to_hashset(yours);
 
-        Card::new(i + 1, winning, yours)
-    }).collect::<Vec<_>>();
+            Card::new(i + 1, winning, yours)
+        })
+        .collect::<Vec<_>>();
 
     let mut count = 0;
     let mut deck = cards.clone();
@@ -55,7 +59,10 @@ pub fn process(input: &str) -> String {
 }
 
 fn to_hashset(input: &str) -> HashSet<usize> {
-    input.split_whitespace().map(|n| n.parse().unwrap()).collect()
+    input
+        .split_whitespace()
+        .map(|n| n.parse().unwrap())
+        .collect()
 }
 
 #[cfg(test)]

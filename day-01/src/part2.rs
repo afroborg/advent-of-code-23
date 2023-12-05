@@ -1,18 +1,24 @@
 use std::char;
 
-const NUMBER_STRINGS: [&str; 9] = ["one", "two", "three", "four", "five", "six", "seven", "eight", "nine"];
+const NUMBER_STRINGS: [&str; 9] = [
+    "one", "two", "three", "four", "five", "six", "seven", "eight", "nine",
+];
 
 pub fn process(input: &str) -> String {
-    let output = input.lines().map(|line| {
-        let mut numbers = (0..line.len()).filter_map(|index| {
-            try_get_number(&line[index..]).to_digit(10)
-        });
+    let output = input
+        .lines()
+        .map(|line| {
+            let mut numbers =
+                (0..line.len()).filter_map(|index| try_get_number(&line[index..]).to_digit(10));
 
-        let first = numbers.next().expect("No first number");
-        let last = numbers.last().unwrap_or(first);
+            let first = numbers.next().expect("No first number");
+            let last = numbers.last().unwrap_or(first);
 
-        format!("{first}{last}").parse::<u32>().expect("Failed to parse")
-    }).sum::<u32>();
+            format!("{first}{last}")
+                .parse::<u32>()
+                .expect("Failed to parse")
+        })
+        .sum::<u32>();
 
     output.to_string()
 }

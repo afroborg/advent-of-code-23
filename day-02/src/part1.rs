@@ -4,7 +4,7 @@ const MAX_CUBES: &[(Cube, usize); 3] = &[(Cube::Red, 12), (Cube::Green, 13), (Cu
 enum Cube {
     Red,
     Green,
-    Blue
+    Blue,
 }
 
 struct Move {
@@ -17,53 +17,59 @@ pub fn process(input: &str) -> String {
         // remove the "Game: " prefix
         let data = line.split(": ").last().expect("No data");
 
-        let rounds = data.split("; ").map(|round| {
-            round.split(", ").map(|m| {
-                let mut split_move = m.split_whitespace();
+        let rounds = data
+            .split("; ")
+            .map(|round| {
+                round
+                    .split(", ")
+                    .map(|m| {
+                        let mut split_move = m.split_whitespace();
 
-                let num = split_move.next().expect("No number").parse::<usize>().expect("Not a number");
+                        let num = split_move
+                            .next()
+                            .expect("No number")
+                            .parse::<usize>()
+                            .expect("Not a number");
 
-                let cube = match split_move.next().expect("No cube") {
-                    "red" => Cube::Red,
-                    "green" => Cube::Green,
-                    "blue" => Cube::Blue,
-                    _ => panic!("Invalid cube")
-                };
+                        let cube = match split_move.next().expect("No cube") {
+                            "red" => Cube::Red,
+                            "green" => Cube::Green,
+                            "blue" => Cube::Blue,
+                            _ => panic!("Invalid cube"),
+                        };
 
-                Move {
-                    cube,
-                    count: num
-                }
-            }).collect::<Vec<_>>()
-        }).collect::<Vec<_>>();
+                        Move { cube, count: num }
+                    })
+                    .collect::<Vec<_>>()
+            })
+            .collect::<Vec<_>>();
 
         rounds
     });
 
-    let tot = games.enumerate().filter_map(|(i, game)| {
-        let possible = game.iter().all(|round| {
+    let tot = games
+        .enumerate()
+        .filter_map(|(i, game)| {
+            let possible = game.iter().all(|round| {
+                let get_num_cubes = |cube: Cube| {
+                    round
+                        .iter()
+                        .filter_map(|m| if m.cube == cube { Some(m.count) } else { None })
+                        .sum::<usize>()
+                };
 
-            let get_num_cubes = |cube: Cube| {
-                round.iter().filter_map(|m| {
-                    if m.cube == cube {
-                        Some(m.count)
-                    } else {
-                        None
-                    }
-                }).sum::<usize>()
-            };
+                MAX_CUBES
+                    .iter()
+                    .all(|(cube, max)| get_num_cubes(*cube) <= *max)
+            });
 
-            MAX_CUBES.iter().all(|(cube, max)| {
-                get_num_cubes(*cube) <= *max
-            })
-        });
-
-        if possible {
-            Some(i + 1)
-        } else {
-            None
-        }
-    }).sum::<usize>();
+            if possible {
+                Some(i + 1)
+            } else {
+                None
+            }
+        })
+        .sum::<usize>();
 
     tot.to_string()
 }

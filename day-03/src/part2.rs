@@ -19,7 +19,6 @@ impl From<char> for Value {
     }
 }
 
-
 pub fn process(input: &str) -> String {
     let r = Regex::new(r"\d+").unwrap();
     let mut symbols = HashMap::new();
@@ -50,18 +49,20 @@ pub fn process(input: &str) -> String {
                     }
                 }
             }
-
         }
     }
 
+    ratios
+        .iter()
+        .filter_map(|(_pos, values)| {
+            if values.len() != 2 {
+                return None;
+            }
 
-    ratios.iter().filter_map(|(_pos, values)| {
-        if values.len() != 2 {
-            return None;
-        }
-
-        Some(values[0] * values[1])
-    }).sum::<u32>().to_string()
+            Some(values[0] * values[1])
+        })
+        .sum::<u32>()
+        .to_string()
 }
 
 #[cfg(test)]

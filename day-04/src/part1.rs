@@ -7,10 +7,7 @@ struct Card {
 
 impl Card {
     pub fn new(winning: HashSet<usize>, yours: HashSet<usize>) -> Self {
-        Self {
-            winning,
-            yours,
-        }
+        Self { winning, yours }
     }
 
     fn count(&self) -> usize {
@@ -43,7 +40,10 @@ pub fn process(input: &str) -> String {
 }
 
 fn to_hashset(input: &str) -> HashSet<usize> {
-    input.split_whitespace().map(|n| n.parse().unwrap()).collect()
+    input
+        .split_whitespace()
+        .map(|n| n.parse().unwrap())
+        .collect()
 }
 
 #[cfg(test)]

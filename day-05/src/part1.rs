@@ -2,17 +2,18 @@ use std::ops::Range;
 
 #[derive(Debug)]
 struct Map {
-    mappings: Vec<Mapping>
+    mappings: Vec<Mapping>,
 }
 
 impl Map {
     fn convert(&self, source: u64) -> u64 {
-        let mapping = self.mappings.iter().find(|mapping| mapping.source.contains(&source));
+        let mapping = self
+            .mappings
+            .iter()
+            .find(|mapping| mapping.source.contains(&source));
 
         match mapping {
-            Some(mapping) => {
-                mapping.destination.start + (source - mapping.source.start)
-            },
+            Some(mapping) => mapping.destination.start + (source - mapping.source.start),
             None => source,
         }
     }
@@ -21,7 +22,7 @@ impl Map {
 #[derive(Debug)]
 struct Mapping {
     destination: Range<u64>,
-    source: Range<u64>
+    source: Range<u64>,
 }
 
 fn get_mapping<'a>(iter: &mut impl Iterator<Item = &'a str>) -> Vec<Mapping> {
@@ -57,7 +58,15 @@ fn get_mapping<'a>(iter: &mut impl Iterator<Item = &'a str>) -> Vec<Mapping> {
 
 pub fn process(input: &str) -> String {
     let mut lines = input.lines();
-    let seeds = lines.next().unwrap().split(": ").nth(1).unwrap().split(' ').map(|s| s.parse::<u64>().unwrap()).collect::<Vec<_>>();
+    let seeds = lines
+        .next()
+        .unwrap()
+        .split(": ")
+        .nth(1)
+        .unwrap()
+        .split(' ')
+        .map(|s| s.parse::<u64>().unwrap())
+        .collect::<Vec<_>>();
 
     lines.next();
 
@@ -65,18 +74,15 @@ pub fn process(input: &str) -> String {
 
     while let Some(_) = lines.next() {
         let mappings = get_mapping(&mut lines);
-        maps.push(Map{mappings});
+        maps.push(Map { mappings });
     }
 
-    let locations = seeds.iter().map(|seed| {
-        maps.iter().fold(*seed, |seed, map| {
-            map.convert(seed)
-        })
-    });
+    let locations = seeds
+        .iter()
+        .map(|seed| maps.iter().fold(*seed, |seed, map| map.convert(seed)));
 
     locations.min().unwrap().to_string()
 }
-
 
 #[cfg(test)]
 mod tests {

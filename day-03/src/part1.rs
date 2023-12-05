@@ -19,7 +19,6 @@ impl From<char> for Value {
     }
 }
 
-
 pub fn process(input: &str) -> String {
     let r = Regex::new(r"\d+").unwrap();
     let mut symbols = HashMap::new();
@@ -43,7 +42,7 @@ pub fn process(input: &str) -> String {
             let mut has_symbol = false;
 
             for cx in m.start().saturating_sub(1)..=m.end() {
-                for cy in y.saturating_sub(1)..=y+1 {
+                for cy in y.saturating_sub(1)..=y + 1 {
                     let pos = (cx as i32, cy as i32);
                     let symbol = symbols.get(&pos);
 
@@ -56,7 +55,6 @@ pub fn process(input: &str) -> String {
             }
         }
     }
-
 
     part_numbers.iter().sum::<u32>().to_string()
 }
