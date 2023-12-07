@@ -1,5 +1,5 @@
 use rayon::{
-    iter::{IntoParallelIterator, IntoParallelRefIterator, ParallelIterator},
+    iter::{IntoParallelIterator, ParallelIterator},
     slice::ParallelSlice,
 };
 use std::ops::Range;
@@ -90,10 +90,11 @@ pub fn process(input: &str) -> String {
     }
 
     let locations = seeds
-        .par_iter()
-        .map(|seed| maps.iter().fold(*seed, |seed, map| map.convert(seed)));
+        .into_par_iter()
+        .map(|seed| maps.iter().fold(seed, |seed, map| map.convert(seed)))
+        .min();
 
-    locations.min().unwrap().to_string()
+    locations.unwrap().to_string()
 }
 
 #[cfg(test)]
