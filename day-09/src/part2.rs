@@ -1,32 +1,31 @@
 pub fn process(input: &str) -> String {
-    let input_lines = input.lines().map(|line| {
-        line.split_whitespace()
-            .map(|n| n.parse::<i32>().expect("Should be a number"))
-            .collect::<Vec<_>>()
-    });
-
-    let remainders = input_lines
-        .map(|mut numbers| {
-            let mut tot = numbers.first().unwrap().to_owned();
-
-            loop {
-                if numbers.iter().all(|n| n == &0) {
-                    break;
-                }
-
-                numbers = numbers
-                    .windows(2)
-                    .map(|pair| pair[0] - pair[1])
-                    .collect::<Vec<_>>();
-
-                tot += numbers.first().unwrap().to_owned();
-            }
-
-            tot
+    let input_lines = input
+        .lines()
+        .map(|line| {
+            line.split_whitespace()
+                .map(|n| n.parse::<i32>().expect("Should be a number"))
+                .collect::<Vec<_>>()
         })
+        .map(iterate)
         .sum::<i32>();
 
-    remainders.to_string()
+    input_lines.to_string()
+}
+
+fn iterate(v: Vec<i32>) -> i32 {
+    let mut temp = vec![];
+
+    for i in 0..v.len() - 1 {
+        temp.push(v[i + 1] - v[i]);
+    }
+
+    let first = v.first().unwrap().to_owned();
+
+    if temp.iter().all(|n| n == &0) {
+        return first;
+    }
+
+    first - iterate(temp)
 }
 
 #[cfg(test)]
