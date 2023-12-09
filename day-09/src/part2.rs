@@ -22,10 +22,10 @@ fn iterate(v: Vec<i32>) -> i32 {
     let first = v.first().unwrap().to_owned();
 
     if temp.iter().all(|n| n == &0) {
-        return first;
+        first
+    } else {
+        first - iterate(temp)
     }
-
-    first - iterate(temp)
 }
 
 #[cfg(test)]
