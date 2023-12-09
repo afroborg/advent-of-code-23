@@ -7,7 +7,7 @@ pub fn process(input: &str) -> String {
 
     let remainders = input_lines
         .map(|mut numbers| {
-            let mut ends = vec![numbers.first().unwrap().to_owned()];
+            let mut tot = numbers.first().unwrap().to_owned();
 
             loop {
                 if numbers.iter().all(|n| n == &0) {
@@ -19,10 +19,10 @@ pub fn process(input: &str) -> String {
                     .map(|pair| pair[0] - pair[1])
                     .collect::<Vec<_>>();
 
-                ends.push(numbers.first().unwrap().to_owned());
+                tot += numbers.first().unwrap().to_owned();
             }
 
-            ends.iter().sum::<i32>()
+            tot
         })
         .sum::<i32>();
 
